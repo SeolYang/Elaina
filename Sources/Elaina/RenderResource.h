@@ -13,14 +13,14 @@ namespace Elaina
    {
    public:
       /** Deferred-created resources */
-      explicit RenderResource(const StringType& name, const RenderPass* creator, const DescriptorType& description) :
+      explicit RenderResource(const StringType& name, RenderPass* creator, const DescriptorType& description) :
          Description(description),
          RenderResource(name, creator)
       {
       }
 
       /** External Permanent resources */
-      explicit RenderResource(const StringType& name, const DescriptorType& description, ActualType* actual) :
+      explicit RenderResource(const StringType& name, DescriptorType& description, ActualType* actual) :
          Description(description),
          Actual(actual),
          RenderResource(name, nullptr)
@@ -36,9 +36,9 @@ namespace Elaina
          }
       }
 
-      const RenderPass* GetCreator() const { return Creator; }
-      std::vector<const RenderPass*>& GetReaders() { return Readers; }
-      std::vector<const RenderPass*>& GetWriters() { return Writers; }
+      RenderPass* GetCreator() const { return Creator; }
+      std::vector<RenderPass*>& GetReaders() { return Readers; }
+      std::vector<RenderPass*>& GetWriters() { return Writers; }
 
       size_t GetID() const { return Identifier; }
       StringType GetName() const { return Name; }
@@ -55,7 +55,7 @@ namespace Elaina
       bool IsExternalPermanent() const { return (!IsTransient() && IsRealized()); }
 
    private:
-      explicit Resource(const StringType& name, const RenderPass* creator) :
+      explicit Resource(const StringType& name, RenderPass* creator) :
          Name(name),
          Creator(creator),
          RefCount(0),
@@ -87,9 +87,9 @@ namespace Elaina
       size_t      Identifier;
       StringType  Name;
 
-      const RenderPass* Creator;
-      std::vector<const RenderPass*> Readers;
-      std::vector<const RenderPass*> Writers;
+      RenderPass* Creator;
+      std::vector<RenderPass*> Readers;
+      std::vector<RenderPass*> Writers;
       size_t RefCount;
 
       DescriptorType Description;
