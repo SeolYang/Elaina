@@ -15,9 +15,6 @@
     <ClInclude Include="..\Sources\Elaina\FrameGraph.h">
       <Filter>Sources\Elaina</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\Elaina\Resource.h">
-      <Filter>Sources\Elaina</Filter>
-    </ClInclude>
     <ClInclude Include="..\Sources\Elaina\RenderPass.h">
       <Filter>Sources\Elaina</Filter>
     </ClInclude>
@@ -27,13 +24,16 @@
     <ClInclude Include="..\Sources\Elaina\Elaina.config.h">
       <Filter>Sources\Elaina</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\Elaina\Realize.h">
+      <Filter>Sources\Elaina</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\Elaina\FrameResource.h">
+      <Filter>Sources\Elaina</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Sources\Test\main.cpp">
       <Filter>Sources\Test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\Elaina\Resource.cpp">
-      <Filter>Sources\Elaina</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
