@@ -46,7 +46,7 @@ namespace Elaina
 
       size_t GetRefCount() const { return RefCount; }
       size_t Referencing() { ++RefCount; return RefCount; }
-      size_t DeReferencing() { --RefCount; return RefCount; }
+      size_t Unreferencing() { --RefCount; return RefCount; }
 
       DescriptorType GetDescriptor() const { return Descriptor; }
       ActualType* GetActual() const { return Actual; }
