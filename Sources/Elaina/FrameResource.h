@@ -21,7 +21,7 @@ namespace Elaina
       }
 
       /** External Permanent resources */
-      explicit FrameResource(const StringType& name, DescriptorType& description, ActualType* actual) :
+      explicit FrameResource(const StringType& name, DescriptorType& descriptor, ActualType* actual) :
          Descriptor(descriptor),
          Actual(actual),
          FrameResource(name, nullptr)
