@@ -2,5 +2,8 @@
 
 namespace Elaina
 {
+   class FrameGraphBuilder
+   {
 
+   };
 }

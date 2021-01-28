@@ -33,3 +33,9 @@
 *.opendb
 *.db
 *.ipch
+*.ilk
+*.pdb
+Projects/.vs/Elaina/v16/.suo
+*.tlog
+*.log
+*.idb

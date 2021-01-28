@@ -4,5 +4,36 @@
     <Filter Include="Sources">
       <UniqueIdentifier>{bbf6d997-f68a-4960-b2f4-d34a852e8a1a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Elaina">
+      <UniqueIdentifier>{acabbaa1-01e0-4d4e-a3ad-ddfdd0812297}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Test">
+      <UniqueIdentifier>{f7d24694-4164-4215-a580-95f974952f2c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Sources\Elaina\FrameGraph.h">
+      <Filter>Sources\Elaina</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\Elaina\Resource.h">
+      <Filter>Sources\Elaina</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\Elaina\RenderPass.h">
+      <Filter>Sources\Elaina</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\Elaina\FrameGraphBuilder.h">
+      <Filter>Sources\Elaina</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\Elaina\Elaina.config.h">
+      <Filter>Sources\Elaina</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Sources\Test\main.cpp">
+      <Filter>Sources\Test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\Elaina\Resource.cpp">
+      <Filter>Sources\Elaina</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
