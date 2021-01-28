@@ -1,6 +1,6 @@
 #include <Elaina/FrameGraph.h>
 #include <Elaina/FrameGraphBuilder.h>
-#include <Elaina/RenderResource.h>
+#include <Elaina/FrameResource.h>
 
 int main()
 {

@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <Elaina/Elaina.config.h>
+#include <Elaina/Realize.h>
 
 namespace Elaina
 {
@@ -9,25 +10,25 @@ namespace Elaina
    class FrameGraphBuilder;
 
    template <typename DescriptorType, typename ActualType>
-   class RenderResource
+   class FrameResource
    {
    public:
       /** Deferred-created resources */
-      explicit RenderResource(const StringType& name, RenderPass* creator, const DescriptorType& descriptor) :
+      explicit FrameResource(const StringType& name, RenderPass* creator, const DescriptorType& descriptor) :
          Descriptor(descriptor),
-         RenderResource(name, creator)
+         FrameResource(name, creator)
       {
       }
 
       /** External Permanent resources */
-      explicit RenderResource(const StringType& name, DescriptorType& description, ActualType* actual) :
+      explicit FrameResource(const StringType& name, DescriptorType& description, ActualType* actual) :
          Descriptor(descriptor),
          Actual(actual),
-         RenderResource(name, nullptr)
+         FrameResource(name, nullptr)
       {
       }
 
-      virtual ~RenderResource()
+      virtual ~FrameResource()
       {
          /** Delete 'actual' only if it is transient resource and deferred created(or realized). */
          if (IsTransient())
@@ -55,7 +56,7 @@ namespace Elaina
       bool IsExternalPermanent() const { return (!IsTransient() && IsRealized()); }
 
    private:
-      explicit Resource(const StringType& name, RenderPass* creator) :
+      explicit FrameResource(const StringType& name, RenderPass* creator) :
          Name(name),
          Creator(creator),
          RefCount(0),
@@ -71,8 +72,7 @@ namespace Elaina
       {
          if (IsTransient() && !IsRealized())
          {
-            // @todo 실제 리소스 오브젝트(ex. ID3D11Texture2D / ID3D11RenderTarget 등등.. 또는 래핑 클래스들)
-            RealizeImpl();
+            Actual = Elaina::Realize<DescriptorType, ActualType>(Descriptor);
          }
       }
 
