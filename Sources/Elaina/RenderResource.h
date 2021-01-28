@@ -13,15 +13,15 @@ namespace Elaina
    {
    public:
       /** Deferred-created resources */
-      explicit RenderResource(const StringType& name, RenderPass* creator, const DescriptorType& description) :
-         Description(description),
+      explicit RenderResource(const StringType& name, RenderPass* creator, const DescriptorType& descriptor) :
+         Descriptor(descriptor),
          RenderResource(name, creator)
       {
       }
 
       /** External Permanent resources */
       explicit RenderResource(const StringType& name, DescriptorType& description, ActualType* actual) :
-         Description(description),
+         Descriptor(descriptor),
          Actual(actual),
          RenderResource(name, nullptr)
       {
@@ -47,7 +47,7 @@ namespace Elaina
       size_t Referencing() { ++RefCount; return RefCount; }
       size_t DeReferencing() { --RefCount; return RefCount; }
 
-      Description GetDescription() const { return Description; }
+      DescriptorType GetDescriptor() const { return Descriptor; }
       ActualType* GetActual() const { return Actual; }
 
       bool IsTransient() const { return (Creator != nullptr); }
@@ -59,7 +59,7 @@ namespace Elaina
          Name(name),
          Creator(creator),
          RefCount(0),
-         Description(DescriptorType()),
+         Descriptor(DescriptorType()),
          Actual(nullptr)
       {
          static size_t IdentifierCounter = 0;
@@ -72,6 +72,7 @@ namespace Elaina
          if (IsTransient() && !IsRealized())
          {
             // @todo 실제 리소스 오브젝트(ex. ID3D11Texture2D / ID3D11RenderTarget 등등.. 또는 래핑 클래스들)
+            RealizeImpl();
          }
       }
 
@@ -92,7 +93,7 @@ namespace Elaina
       std::vector<RenderPass*> Writers;
       size_t RefCount;
 
-      DescriptorType Description;
+      DescriptorType Descriptor;
       ActualType* Actual;
 
    };
