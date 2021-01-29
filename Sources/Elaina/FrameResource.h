@@ -81,7 +81,7 @@ namespace Elaina
       virtual ~FrameResource()
       {
          /** Delete 'actual' only if it is transient resource and deferred created(or realized). */
-         DeRealize();
+         Derealize();
       }
 
       DescriptorType GetDescriptor() const { return Descriptor; }
