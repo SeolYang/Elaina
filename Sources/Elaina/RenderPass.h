@@ -5,7 +5,7 @@
 
 namespace Elaina
 {
-   class FrameResource;
+   class FrameResourceBase;
    class FrameGraph;
    class RenderPassBuilder;
 
@@ -38,9 +38,9 @@ namespace Elaina
    private:
       StringType Name;
 
-      std::vector<FrameResource*> Creates;
-      std::vector<FrameResource*> Reads;
-      std::vector<FrameResource*> Writes;
+      std::vector<FrameResourceBase*> Creates;
+      std::vector<FrameResourceBase*> Reads;
+      std::vector<FrameResourceBase*> Writes;
       size_t RefCount;
 
       friend FrameGraph;

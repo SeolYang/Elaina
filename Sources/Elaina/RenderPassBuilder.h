@@ -4,7 +4,7 @@
 namespace Elaina
 {
    class FrameGraph;
-   class FrameResource;
+   class FrameResourceBase;
    class RenderPass;
    class RenderPassBuilder
    {

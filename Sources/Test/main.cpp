@@ -1,5 +1,4 @@
 #include <Elaina/FrameGraph.h>
-#include <Elaina/FrameGraphBuilder.h>
 #include <Elaina/FrameResource.h>
 
 struct IntDescriptor

@@ -9,8 +9,57 @@ namespace Elaina
    class FrameGraph;
    class RenderPassBuilder;
 
+   class FrameResourceBase
+   {
+   public:
+      explicit FrameResourceBase(const StringType& name, RenderPass* creator) :
+         Name(name),
+         Creator(creator),
+         RefCount(0)
+      {
+         static size_t IdentifierCounter = 0;
+         Identifier = IdentifierCounter;
+         ++IdentifierCounter;
+      }
+
+      RenderPass* GetCreator() const { return Creator; }
+
+      size_t GetID() const { return Identifier; }
+      StringType GetName() const { return Name; }
+
+      size_t GetRefCount() const { return RefCount; }
+
+      bool IsTransient() const { return (Creator != nullptr); }
+      virtual bool IsRealized() const = 0;
+      bool IsExternalPermanent() const { return (!IsTransient() && IsRealized()); }
+
+   protected:
+      virtual void Realize() = 0;
+      virtual void DeRealize() = 0;
+
+   private:
+      /** Calculate Reference Count */
+      void OnCompile()
+      {
+         RefCount = Readers.size();
+      }
+
+   protected:
+      size_t      Identifier;
+      StringType  Name;
+
+      RenderPass* Creator;
+      std::vector<RenderPass*> Readers;
+      std::vector<RenderPass*> Writers;
+      size_t RefCount;
+
+      friend FrameGraph;
+      friend RenderPassBuilder;
+
+   };
+
    template <typename DescriptorType, typename ActualType>
-   class FrameResource
+   class FrameResource : public FrameResourceBase
    {
    public:
       /** Deferred-created resources */
@@ -34,34 +83,13 @@ namespace Elaina
          DeRealize();
       }
 
-      RenderPass* GetCreator() const { return Creator; }
-
-      size_t GetID() const { return Identifier; }
-      StringType GetName() const { return Name; }
-
-      size_t GetRefCount() const { return RefCount; }
-
       DescriptorType GetDescriptor() const { return Descriptor; }
       ActualType* GetActual() const { return Actual; }
 
-      bool IsTransient() const { return (Creator != nullptr); }
-      bool IsRealized() const { return (Actual != nullptr); }
-      bool IsExternalPermanent() const { return (!IsTransient() && IsRealized()); }
+      virtual bool IsRealized() const override { return (Actual != nullptr); }
 
-   private:
-      explicit FrameResource(const StringType& name, RenderPass* creator) :
-         Name(name),
-         Creator(creator),
-         RefCount(0),
-         Descriptor(DescriptorType()),
-         Actual(nullptr)
-      {
-         static size_t IdentifierCounter = 0;
-         Identifier = IdentifierCounter;
-         ++IdentifierCounter;
-      }
-
-      void Realize()
+   protected:
+      virtual void Realize() override
       {
          if (IsTransient() && !IsRealized())
          {
@@ -69,7 +97,7 @@ namespace Elaina
          }
       }
 
-      void DeRealize()
+      virtual void DeRealize() override
       {
          if (IsTransient() && IsRealized())
          {
@@ -77,27 +105,9 @@ namespace Elaina
          }
       }
 
-      /** Calculate Reference Count */
-      void OnCompile()
-      {
-         RefCount = Readers.size();
-      }
-
    protected:
       DescriptorType Descriptor;
       ActualType* Actual;
-
-   private:
-      size_t      Identifier;
-      StringType  Name;
-
-      RenderPass* Creator;
-      std::vector<RenderPass*> Readers;
-      std::vector<RenderPass*> Writers;
-      size_t RefCount;
-
-      friend FrameGraph;
-      friend RenderPassBuilder;
 
    };
 }
