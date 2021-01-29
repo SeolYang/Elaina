@@ -7,7 +7,7 @@ namespace Elaina
 {
    class RenderPass;
    class FrameGraph;
-   class FrameGraphBuilder;
+   class RenderPassBuilder;
 
    template <typename DescriptorType, typename ActualType>
    class FrameResource
@@ -97,6 +97,7 @@ namespace Elaina
       size_t RefCount;
 
       friend FrameGraph;
+      friend RenderPassBuilder;
 
    };
 }

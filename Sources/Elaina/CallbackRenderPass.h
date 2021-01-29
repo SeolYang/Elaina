@@ -6,11 +6,11 @@ namespace Elaina
    template <typename DataType>
    class CallbackRenderPass : public RenderPass
    {
-      using SetupCallbackType = std::function<void(FrameGraphBuilder&, DataType&)>;
+      using SetupCallbackType = std::function<void(RenderPassBuilder&, DataType&)>;
       using ExecuteCallbackType = std::function<void(const DtaType&)>;
 
    public:
-      explicit CallbackRenderPass(const StringType& name, const SetupCallback& setupCallback, const ExecuteCallbackType& executeCallback) :
+      explicit CallbackRenderPass(const StringType& name, const SetupCallbackType& setupCallback, const ExecuteCallbackType& executeCallback) :
          SetupCallback(setupCallback),
          ExecuteCallback(executeCallback),
          RenderPass(name)
@@ -22,7 +22,7 @@ namespace Elaina
       const DataType& GetData() const { return Data; }
 
    protected:
-      virtual void Setup(FrameGraphBuilder& builder) override
+      virtual void Setup(RenderPassBuilder& builder) override
       {
          SetupCallback(builder, Data);
       }

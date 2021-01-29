@@ -7,7 +7,7 @@ namespace Elaina
 {
    class FrameResource;
    class FrameGraph;
-   class FrameGraphBuilder;
+   class RenderPassBuilder;
 
    class RenderPass
    {
@@ -18,13 +18,7 @@ namespace Elaina
       {
       }
 
-      virtual ~RenderPass()
-      {
-         for (FrameResource* ownResource : Creates)
-         {
-            SafeDelete(ownResource);
-         }
-      }
+      virtual ~RenderPass() = default;
 
       StringType GetName() const { return Name; }
 
@@ -33,7 +27,7 @@ namespace Elaina
 
    protected:
       /** Create resource handles */
-      virtual void Setup(FrameGraphBuilder& builder) = 0;
+      virtual void Setup(RenderPassBuilder& builder) = 0;
       /** Perfom actual rendering operations */
       virtual void Execute() const = 0;
 
@@ -50,7 +44,7 @@ namespace Elaina
       size_t RefCount;
 
       friend FrameGraph;
-      friend FrameGraphBuilder;
+      friend RenderPassBuilder;
 
    };
 }
