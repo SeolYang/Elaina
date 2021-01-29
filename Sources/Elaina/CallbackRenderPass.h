@@ -27,7 +27,7 @@ namespace Elaina
          SetupCallback(builder, Data);
       }
 
-      virtual void Execute() const override
+      virtual void Execute() override
       {
          ExecuteCallback(Data);
       }

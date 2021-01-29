@@ -29,7 +29,7 @@ namespace Elaina
       /** Create resource handles */
       virtual void Setup(RenderPassBuilder& builder) = 0;
       /** Perfom actual rendering operations */
-      virtual void Execute() const = 0;
+      virtual void Execute() = 0;
 
    private:
       /** Calculate Reference count */
