@@ -13,16 +13,6 @@ namespace Elaina
    class FrameResourceBase
    {
    public:
-      explicit FrameResourceBase(const StringType& name, RenderPass* creator) :
-         Name(name),
-         Creator(creator),
-         RefCount(0)
-      {
-         static size_t IdentifierCounter = 0;
-         Identifier = IdentifierCounter;
-         ++IdentifierCounter;
-      }
-
       RenderPass* GetCreator() const { return Creator; }
 
       size_t GetID() const { return Identifier; }
@@ -37,6 +27,16 @@ namespace Elaina
       bool IsExternalPermanent() const { return (!IsTransient()); }
 
    protected:
+      explicit FrameResourceBase(const StringType& name, RenderPass* creator) :
+         Name(name),
+         Creator(creator),
+         RefCount(0)
+      {
+         static size_t IdentifierCounter = 0;
+         Identifier = IdentifierCounter;
+         ++IdentifierCounter;
+      }
+
       virtual void Realize() = 0;
       virtual void Derealize() = 0;
 
@@ -72,15 +72,15 @@ namespace Elaina
       /** Deferred-created resources */
       explicit FrameResource(const StringType& name, RenderPass* creator, const DescriptorType& descriptor) :
          Descriptor(descriptor),
-         FrameResource(name, creator)
+         FrameResourceBase(name, creator)
       {
       }
 
       /** External Permanent resources */
-      explicit FrameResource(const StringType& name, DescriptorType& descriptor, ActualType* actual) :
+      explicit FrameResource(const StringType& name, const DescriptorType& descriptor, ActualType* actual) :
          Descriptor(descriptor),
          Actual(actual),
-         FrameResource(name, nullptr)
+         FrameResourceBase(name, nullptr)
       {
       }
 
