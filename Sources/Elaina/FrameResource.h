@@ -31,22 +31,15 @@ namespace Elaina
       virtual ~FrameResource()
       {
          /** Delete 'actual' only if it is transient resource and deferred created(or realized). */
-         if (IsTransient())
-         {
-            SafeDelete(Actual);
-         }
+         DeRealize();
       }
 
       RenderPass* GetCreator() const { return Creator; }
-      std::vector<RenderPass*>& GetReaders() { return Readers; }
-      std::vector<RenderPass*>& GetWriters() { return Writers; }
 
       size_t GetID() const { return Identifier; }
       StringType GetName() const { return Name; }
 
       size_t GetRefCount() const { return RefCount; }
-      size_t Referencing() { ++RefCount; return RefCount; }
-      size_t Unreferencing() { --RefCount; return RefCount; }
 
       DescriptorType GetDescriptor() const { return Descriptor; }
       ActualType* GetActual() const { return Actual; }
@@ -84,6 +77,16 @@ namespace Elaina
          }
       }
 
+      /** Calculate Reference Count */
+      void OnCompile()
+      {
+         RefCount = Readers.size();
+      }
+
+   protected:
+      DescriptorType Descriptor;
+      ActualType* Actual;
+
    private:
       size_t      Identifier;
       StringType  Name;
@@ -93,8 +96,7 @@ namespace Elaina
       std::vector<RenderPass*> Writers;
       size_t RefCount;
 
-      DescriptorType Descriptor;
-      ActualType* Actual;
+      friend FrameGraph;
 
    };
 }
