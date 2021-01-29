@@ -18,9 +18,6 @@
     <ClInclude Include="..\Sources\Elaina\RenderPass.h">
       <Filter>Sources\Elaina</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\Elaina\FrameGraphBuilder.h">
-      <Filter>Sources\Elaina</Filter>
-    </ClInclude>
     <ClInclude Include="..\Sources\Elaina\Elaina.config.h">
       <Filter>Sources\Elaina</Filter>
     </ClInclude>
@@ -31,6 +28,9 @@
       <Filter>Sources\Elaina</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\Elaina\CallbackRenderPass.h">
+      <Filter>Sources\Elaina</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\Elaina\RenderPassBuilder.h">
       <Filter>Sources\Elaina</Filter>
     </ClInclude>
   </ItemGroup>
