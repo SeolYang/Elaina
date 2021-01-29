@@ -11,6 +11,10 @@ namespace Elaina
    /** Execute 단계에서 실제로 실행될 렌더 패스와 할당 또는 할당 해제될 리소스들의 리스트 */
    struct RenderPhase
    {
+      RenderPhase() : RenderPass(nullptr)
+      {
+      }
+
       Elaina::RenderPass* RenderPass;
       std::vector<FrameResourceBase*> ToRealize;
       std::vector<FrameResourceBase*> ToDerealize;
@@ -41,7 +45,13 @@ namespace Elaina
       template <typename DataType, typename... Args>
       CallbackRenderPass<DataType>* AddCallbackPass(Args&&... args)
       {
-         return AddRenderPass<CallbackRenderPass<DataType>>(args...);
+         auto* newRenderPass = new CallbackRenderPass<DataType>(args...);
+         RenderPasses.push_back(newRenderPass);
+
+         RenderPassBuilder builder(this, newRenderPass);
+         newRenderPass->Setup(builder);
+
+         return newRenderPass;
       }
 
       template <typename DescriptorType, typename ActualType>
