@@ -29,10 +29,12 @@ namespace Elaina
       StringType GetName() const { return Name; }
 
       size_t GetRefCount() const { return RefCount; }
+      /** Resource which does not reference to any Render pass and even not a external permanent resource. */
+      bool IsExpired() const { return (RefCount == 0) && IsTransient(); }
 
       bool IsTransient() const { return (Creator != nullptr); }
       virtual bool IsRealized() const = 0;
-      bool IsExternalPermanent() const { return (!IsTransient() && IsRealized()); }
+      bool IsExternalPermanent() const { return (!IsTransient()); }
 
    protected:
       virtual void Realize() = 0;
