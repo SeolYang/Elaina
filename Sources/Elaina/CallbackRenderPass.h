@@ -7,7 +7,7 @@ namespace Elaina
    class CallbackRenderPass : public RenderPass
    {
       using SetupCallbackType = std::function<void(RenderPassBuilder&, DataType&)>;
-      using ExecuteCallbackType = std::function<void(const DtaType&)>;
+      using ExecuteCallbackType = std::function<void(const DataType&)>;
 
    public:
       explicit CallbackRenderPass(const StringType& name, const SetupCallbackType& setupCallback, const ExecuteCallbackType& executeCallback) :

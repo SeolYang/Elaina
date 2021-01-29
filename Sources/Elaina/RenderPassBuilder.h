@@ -1,5 +1,6 @@
 #pragma once
 #include <Elaina/Elaina.config.h>
+#include <Elaina/RenderPass.h>
 
 namespace Elaina
 {
@@ -21,10 +22,20 @@ namespace Elaina
       ResourceType* Create(const StringType& name, const DescriptorType& descriptor);
 
       template <typename ResourceType>
-      ResourceType* Read(ResourceType* resource);
+      ResourceType* Read(ResourceType* resource)
+      {
+         resource->Readers.push_back(TargetRenderPass);
+         TargetRenderPass->Reads.push_back(resource);
+         return resource;
+      }
 
       template <typename ResourceType>
-      ResourceType* Write(ResourceType* resource);
+      ResourceType* Write(ResourceType* resource)
+      {
+         resource->Writers.push_back(TargetRenderPass);
+         TargetRenderPass->Writes.push_back(resource);
+         return resource;
+      }
 
    private:
       FrameGraph* TargetFrameGraph;

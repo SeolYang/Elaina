@@ -9,6 +9,7 @@ namespace Elaina
    class FrameGraph;
    class RenderPassBuilder;
 
+   /** Resource Handler */
    class FrameResourceBase
    {
    public:
