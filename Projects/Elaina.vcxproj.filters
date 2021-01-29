@@ -30,6 +30,9 @@
     <ClInclude Include="..\Sources\Elaina\FrameResource.h">
       <Filter>Sources\Elaina</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\Elaina\CallbackRenderPass.h">
+      <Filter>Sources\Elaina</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Sources\Test\main.cpp">

@@ -89,6 +89,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\Sources\Elaina\CallbackRenderPass.h" />
     <ClInclude Include="..\Sources\Elaina\Elaina.config.h" />
     <ClInclude Include="..\Sources\Elaina\FrameGraph.h" />
     <ClInclude Include="..\Sources\Elaina\FrameGraphBuilder.h" />
