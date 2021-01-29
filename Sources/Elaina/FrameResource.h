@@ -36,7 +36,7 @@ namespace Elaina
 
    protected:
       virtual void Realize() = 0;
-      virtual void DeRealize() = 0;
+      virtual void Derealize() = 0;
 
    private:
       /** Calculate Reference Count */
@@ -98,7 +98,7 @@ namespace Elaina
          }
       }
 
-      virtual void DeRealize() override
+      virtual void Derealize() override
       {
          if (IsTransient() && IsRealized())
          {
