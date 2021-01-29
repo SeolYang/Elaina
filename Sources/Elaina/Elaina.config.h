@@ -3,8 +3,8 @@
 
 namespace Elaina
 {
-  using StringType = std::wstring;
-  // using StringType = std::string;
+  //using StringType = std::wstring;
+  using StringType = std::string;
 
   template <typename Type>
   static void SafeDelete(Type& pointer)
