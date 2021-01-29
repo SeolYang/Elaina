@@ -11,6 +11,7 @@ namespace Elaina
 
    public:
       explicit CallbackRenderPass(const StringType& name, const SetupCallbackType& setupCallback, const ExecuteCallbackType& executeCallback) :
+         Data(DataType()),
          SetupCallback(setupCallback),
          ExecuteCallback(executeCallback),
          RenderPass(name)
@@ -36,6 +37,8 @@ namespace Elaina
       DataType Data;
       const SetupCallbackType SetupCallback;
       const ExecuteCallbackType ExecuteCallback;
+
+      friend FrameGraph;
 
    };
 }
