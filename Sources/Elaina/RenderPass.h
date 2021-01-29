@@ -23,16 +23,25 @@ namespace Elaina
       StringType GetName() const { return Name; }
 
       size_t GetReferenceCount() const { return RefCount; }
-      bool IsCulled() const { return (RefCount == 0); }
+      bool IsNeedToCull() const { return (RefCount == 0); }
 
    protected:
-      /** Create resource handles */
+      /**
+      * @brief Create resource handles 
+      */
       virtual void Setup(RenderPassBuilder& builder) = 0;
-      /** Perfom actual rendering operations */
+
+      /** 
+      * @brief Perfom actual rendering operations
+      */
       virtual void Execute() = 0;
 
    private:
-      /** Calculate Reference count */
+      /** 
+      * @brief Calculate Reference count
+      * 자신이 만들어낸 리소스와 써야할 리소스에게서만 참조된다
+      * (리소스가 RenderPass를 참조해야하는 경우; RefCount = Resource의 수)
+      */
       void OnCompile() { RefCount = (Creates.size() + Writes.size()); }
 
    private:

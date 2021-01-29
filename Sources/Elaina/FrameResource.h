@@ -41,7 +41,11 @@ namespace Elaina
       virtual void Derealize() = 0;
 
    private:
-      /** Calculate Reference Count */
+      /**
+      * @brief Calculate Reference count
+      * 자신을 읽는 RenderPass에게 참조된다
+      * (RenderPass가 리소스를 참조해야하는 경우; RefCount = RenderPass의 수)
+      */
       void OnCompile()
       {
          RefCount = Readers.size();
