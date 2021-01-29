@@ -72,6 +72,7 @@ namespace Elaina
       /** Deferred-created resources */
       explicit FrameResource(const StringType& name, RenderPass* creator, const DescriptorType& descriptor) :
          Descriptor(descriptor),
+         Actual(nullptr),
          FrameResourceBase(name, creator)
       {
       }
