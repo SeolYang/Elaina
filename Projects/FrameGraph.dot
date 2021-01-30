@@ -5,6 +5,7 @@ bgcolor = black
 node [shape=rectangle, fontname="nanumgothic bold", fontsize=12, fontcolor=black]
 edge [fontname="nanumgothic bold", fontsize=12, fontcolor=white]
 "AddPass" [label="AddPass
+\nDistribution Group : 0
 \nRefs : 1", style=filled, fillcolor=darkorange]
 
 "Output" [label="Output

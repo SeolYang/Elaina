@@ -10,11 +10,13 @@ namespace Elaina
       using ExecuteCallbackType = std::function<void(const DataType&)>;
 
    public:
-      explicit CallbackRenderPass(const StringType& name, const SetupCallbackType& setupCallback, const ExecuteCallbackType& executeCallback) :
+      explicit CallbackRenderPass(const StringType& name,
+         const SetupCallbackType& setupCallback, const ExecuteCallbackType& executeCallback,
+         size_t distributionGruop = 0) :
          Data(DataType()),
          SetupCallback(setupCallback),
          ExecuteCallback(executeCallback),
-         RenderPass(name)
+         RenderPass(name, distributionGruop)
       {
       }
 

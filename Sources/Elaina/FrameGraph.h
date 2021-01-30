@@ -303,6 +303,7 @@ namespace Elaina
          {
             stream << "\"" << renderPass->GetName() <<
                "\" [label=\"" << renderPass->GetName() << std::endl
+               << "\\nDistribution Group : " << renderPass->GetDistributionGroup() << std::endl
                << "\\nRefs : " << renderPass->GetRefCount() <<
                "\", style=filled, fillcolor=" << params.RenderPassNodeColor << "]" << std::endl;
          }
