@@ -13,6 +13,7 @@ namespace Elaina
    class FrameResourceBase
    {
    public:
+      virtual ~FrameResourceBase() = default;
       RenderPass* GetCreator() const { return Creator; }
 
       size_t GetID() const { return Identifier; }
