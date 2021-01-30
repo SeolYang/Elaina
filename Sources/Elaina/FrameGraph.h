@@ -1,6 +1,7 @@
 #pragma once
 #include <algorithm>
 #include <stack>
+#include <fstream>
 #include <Elaina/FrameResource.h>
 #include <Elaina/RenderPass.h>
 #include <Elaina/CallbackRenderPass.h>
@@ -252,11 +253,93 @@ namespace Elaina
          Phases.clear();
       }
 
-      void ExportVisualization(const std::string& filePath)
+      /** 
+      * @param filePath Output path
+      * @param bgColor  Background color; "#rgb" | "H S V" | "ColorNmae" (ex. White is "#ffffff" as hexadecimal or "0.0 0.0 1.0" or "White" (https://graphviz.org/doc/info/colors.html)
+      * @param fontName Output font name (https://graphviz.org/doc/info/attrs.html#d:fontname)
+      * @param fontSize Output font size
+      * @param renderPassNodeColor     RenderPass node color
+      * @param transientResNodeColor   Trasient Resource node color
+      * @param externalResNodeColor    External permanent Resource node color
+      * @param createRefEdgeColor      RenderPass->Resource(Create)
+      * @param writeRefEdgeColor       RenderPass->Resource(Write)
+      * @param readRefEdgeColor        Resource->RenderPass(Read)
+      * @graphviz https://sketchviz.com/graphviz-examples
+      */
+      void ExportVisualization(
+         const std::string& filePath,
+         bool bLeftToRight,
+         const std::string& bgColor,
+         const std::string& fontName, double fontSize,
+         const std::string& renderPassNodeColor,
+         const std::string& transientResNodeColor,
+         const std::string& externalResNodeColor,
+         const std::string& createRefEdgeColor,
+         const std::string& writeRefEdgeColor,
+         const std::string& readRefEdgeColor)
       {
-         /*
-         * @TODO  Implement visualize FrameGraph
-         **/
+         std::ofstream stream(filePath);
+
+         stream << "diagraph FrameGraph \n{\n";
+
+         stream << "rankdir = " << (bLeftToRight ? "LR" : "TB") << std::endl;;
+         stream << "bgcolor = " << bgColor << std::endl;
+         stream << "node [shape=rectangle, fontname=\"" << fontName << "\", fontsize=" << fontSize << "]" << std::endl << std::endl;
+
+         /** Export Render Passes as graph nodes */
+         for (auto renderPass : RenderPasses)
+         {
+            stream << "\"" << renderPass->GetName() <<
+               "\" [label=\"" << renderPass->GetName() << std::endl
+               << "Refs : " << renderPass->GetReferenceCount() <<
+               "\", style=filled, fillcolor=" << renderPassNodeColor << "]" << std::endl;
+         }
+         stream << std::endl;
+
+         /** Export Resources as graph nodes */
+         for (auto resource : Resources)
+         {
+            stream << "\"" << resource->GetName() <<
+               "\" [label=\"" << resource->GetName() << std::endl
+               << "ID : " << resource->GetID() << std::endl
+               << "Refs : " << resource->GetRefCount() 
+               << "\", style=filled, fillcolor=" << (resource->IsTransient() ? transientResNodeColor : externalResNodeColor) << "]" << std::endl;
+         }
+
+         /** Export resource referencing relation as directed graph edge */
+         /** RenderPass->Resource Referencing relations */
+         for (auto renderPass : RenderPasses)
+         {
+            /** Create Resource */
+            stream << "\"" << renderPass->GetName() << "\" -> { ";
+            for (auto resource : renderPass->Creates)
+            {
+               stream << "\"" << resource->GetName() << "\" ";
+            }
+            stream << "} [color=" << createRefEdgeColor << "]" << std::endl;
+
+            /** Write Resource */
+            stream << "\"" << renderPass->GetName() << "\" -> { ";
+            for (auto resource : renderPass->Writes)
+            {
+               stream << "\"" << resource->GetName() << "\" ";
+            }
+            stream << "} [color=" << writeRefEdgeColor << "]" << std::endl;
+         }
+         stream << std::endl;
+
+         /** Resource->RenderPass Referencing relations */
+         for (auto resource : Resources)
+         {
+            stream << "\"" << resource->GetName() << "\" -> { ";
+            for (auto renderPass : resource->Readers)
+            {
+               stream << "\"" << renderPass->GetName() << "\" ";
+            }
+            stream << "} [color=" << readRefEdgeColor << "]" << std::endl;
+         }
+
+         stream << "}"; // End of diagraph FrameGraph
       }
 
    private:
