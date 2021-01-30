@@ -40,6 +40,10 @@ namespace Elaina
       double EdgeFontSize = 12.0;
       const std::string& BgColor = "black";
       bool bLeftToRight = true;
+      bool bSplines = false;
+      double Pad = 0.1;
+      double NodeSep = 0.6;
+      double RankSep = 1.5;
       const std::string& RenderPassNodeColor = "darkorange";
       const std::string& TransientResNodeColor = "peachpuff";
       const std::string& ExternalResNodeColor = "palegreen";
@@ -288,8 +292,11 @@ namespace Elaina
 
          stream << "digraph FrameGraph \n{\n";
 
-         stream << "splines=false" << std::endl;
-         stream << "graph [pad=\"0.1\", nodesep=\"1\", ranksep=\"2\"]" << std::endl;
+         stream << "splines=" << (params.bSplines ? "true" : "false") << std::endl;
+
+         stream << "graph [pad=\"" << params.Pad 
+            << "\", nodestep=\"" << params.NodeSep
+            << "\", ranksep=\"" << params.RankSep << "\"]" << std::endl;
 
          stream << "rankdir = " << (params.bLeftToRight ? "LR" : "TB") << std::endl;;
          stream << "bgcolor = " << params.BgColor << std::endl;
