@@ -269,8 +269,10 @@ namespace Elaina
       void ExportVisualization(
          const std::string& filePath,
          const std::string& fontName = "times", double fontSize = 12.0,
-         bool bLeftToRight = true,
+         const std::string& fontColor = "black",
+         const std::string& edgeFontColor = "white", double edgeFontSize = 12.0,
          const std::string& bgColor = "black",
+         bool bLeftToRight = true,
          const std::string& renderPassNodeColor = "darkorange",
          const std::string& transientResNodeColor = "peachpuff",
          const std::string& externalResNodeColor = "palegreen",
@@ -284,7 +286,14 @@ namespace Elaina
 
          stream << "rankdir = " << (bLeftToRight ? "LR" : "TB") << std::endl;;
          stream << "bgcolor = " << bgColor << std::endl;
-         stream << "node [shape=rectangle, fontname=\"" << fontName << "\", fontsize=" << fontSize << "]" << std::endl << std::endl;
+         stream << "node [shape=rectangle, fontname=\""
+            << fontName
+            << "\", fontsize=" << fontSize
+            << ", fontcolor=" << fontColor << "]" << std::endl;
+
+         stream << "edge [fontname=\"" << fontName << "\""
+            << ", fontsize=" << edgeFontSize
+            << ", fontcolor=" << edgeFontColor << "]" << std::endl;
 
          /** Export Render Passes as graph nodes */
          for (auto renderPass : RenderPasses)
