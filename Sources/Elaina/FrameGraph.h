@@ -12,13 +12,40 @@ namespace Elaina
    /** Execute 단계에서 실제로 실행될 렌더 패스와 할당 또는 할당 해제될 리소스들의 리스트 */
    struct RenderPhase
    {
-      RenderPhase() : RenderPass(nullptr)
-      {
-      }
-
-      Elaina::RenderPass* RenderPass;
+      Elaina::RenderPass* RenderPass = nullptr;
       std::vector<FrameResourceBase*> ToRealize;
       std::vector<FrameResourceBase*> ToDerealize;
+   };
+
+   /**
+   * @param filePath Output path
+   * @param bgColor  Background color; "#rgb" | "H S V" | "ColorNmae" (ex. White is "#ffffff" as hexadecimal or "0.0 0.0 1.0" or "White" (https://graphviz.org/doc/info/colors.html)
+   * @param fontName Output font name (https://graphviz.org/doc/info/attrs.html#d:fontname)
+   * @param fontSize Output font size
+   * @param renderPassNodeColor     RenderPass node color
+   * @param transientResNodeColor   Trasient Resource node color
+   * @param externalResNodeColor    External permanent Resource node color
+   * @param createRefEdgeColor      RenderPass->Resource(Create)
+   * @param writeRefEdgeColor       RenderPass->Resource(Write)
+   * @param readRefEdgeColor        Resource->RenderPass(Read)
+   * @graphviz https://sketchviz.com/graphviz-examples
+   */
+   struct VisualizeParams
+   {
+      const std::string& FilePath = "output.dot";
+      const std::string& FontName = "times";
+      double FontSize = 12.0;
+      const std::string& FontColor = "black";
+      const std::string& EdgeFontColor = "white";
+      double EdgeFontSize = 12.0;
+      const std::string& BgColor = "black";
+      bool bLeftToRight = true;
+      const std::string& RenderPassNodeColor = "darkorange";
+      const std::string& TransientResNodeColor = "peachpuff";
+      const std::string& ExternalResNodeColor = "palegreen";
+      const std::string& CreateRefEdgeColor = "aquamarine";
+      const std::string& WriteRefEdgeColor = "firebrick1";
+      const std::string& ReadRefEdgeColor = "beige";
    };
 
    class FrameGraph
@@ -253,47 +280,23 @@ namespace Elaina
          Phases.clear();
       }
 
-      /** 
-      * @param filePath Output path
-      * @param bgColor  Background color; "#rgb" | "H S V" | "ColorNmae" (ex. White is "#ffffff" as hexadecimal or "0.0 0.0 1.0" or "White" (https://graphviz.org/doc/info/colors.html)
-      * @param fontName Output font name (https://graphviz.org/doc/info/attrs.html#d:fontname)
-      * @param fontSize Output font size
-      * @param renderPassNodeColor     RenderPass node color
-      * @param transientResNodeColor   Trasient Resource node color
-      * @param externalResNodeColor    External permanent Resource node color
-      * @param createRefEdgeColor      RenderPass->Resource(Create)
-      * @param writeRefEdgeColor       RenderPass->Resource(Write)
-      * @param readRefEdgeColor        Resource->RenderPass(Read)
-      * @graphviz https://sketchviz.com/graphviz-examples
-      */
-      void ExportVisualization(
-         const std::string& filePath,
-         const std::string& fontName = "times", double fontSize = 12.0,
-         const std::string& fontColor = "black",
-         const std::string& edgeFontColor = "white", double edgeFontSize = 12.0,
-         const std::string& bgColor = "black",
-         bool bLeftToRight = true,
-         const std::string& renderPassNodeColor = "darkorange",
-         const std::string& transientResNodeColor = "peachpuff",
-         const std::string& externalResNodeColor = "palegreen",
-         const std::string& createRefEdgeColor = "aquamarine",
-         const std::string& writeRefEdgeColor = "firebrick1",
-         const std::string& readRefEdgeColor = "beige")
+
+      void ExportVisualization(const VisualizeParams& params)
       {
-         std::ofstream stream(filePath);
+         std::ofstream stream(params.FilePath);
 
          stream << "digraph FrameGraph \n{\n";
 
-         stream << "rankdir = " << (bLeftToRight ? "LR" : "TB") << std::endl;;
-         stream << "bgcolor = " << bgColor << std::endl;
+         stream << "rankdir = " << (params.bLeftToRight ? "LR" : "TB") << std::endl;;
+         stream << "bgcolor = " << params.BgColor << std::endl;
          stream << "node [shape=rectangle, fontname=\""
-            << fontName
-            << "\", fontsize=" << fontSize
-            << ", fontcolor=" << fontColor << "]" << std::endl;
+            << params.FontName
+            << "\", fontsize=" << params.FontSize
+            << ", fontcolor=" << params.FontColor << "]" << std::endl;
 
-         stream << "edge [fontname=\"" << fontName << "\""
-            << ", fontsize=" << edgeFontSize
-            << ", fontcolor=" << edgeFontColor << "]" << std::endl;
+         stream << "edge [fontname=\"" << params.FontName << "\""
+            << ", fontsize=" << params.EdgeFontSize
+            << ", fontcolor=" << params.EdgeFontColor << "]" << std::endl;
 
          /** Export Render Passes as graph nodes */
          for (auto renderPass : RenderPasses)
@@ -301,7 +304,7 @@ namespace Elaina
             stream << "\"" << renderPass->GetName() <<
                "\" [label=\"" << renderPass->GetName() << std::endl
                << "\\nRefs : " << renderPass->GetRefCount() <<
-               "\", style=filled, fillcolor=" << renderPassNodeColor << "]" << std::endl;
+               "\", style=filled, fillcolor=" << params.RenderPassNodeColor << "]" << std::endl;
          }
          stream << std::endl;
 
@@ -313,7 +316,7 @@ namespace Elaina
                << "\\nID : " << resource->GetID() << std::endl
                << "\\nRefs : " << resource->GetRefCount() << std::endl
                << "\\n" << (resource->IsTransient() ? "Transient" : "External Permanent")
-               << "\", style=filled, fillcolor=" << (resource->IsTransient() ? transientResNodeColor : externalResNodeColor) << "]" << std::endl;
+               << "\", style=filled, fillcolor=" << (resource->IsTransient() ? params.TransientResNodeColor : params.ExternalResNodeColor) << "]" << std::endl;
          }
 
          /** Export resource referencing relation as directed graph edge */
@@ -326,7 +329,7 @@ namespace Elaina
             {
                stream << "\"" << resource->GetName() << "\" ";
             }
-            stream << "} [color=" << createRefEdgeColor
+            stream << "} [color=" << params.CreateRefEdgeColor
                << ", label=\"  Create\"]"
                << std::endl;
 
@@ -336,7 +339,7 @@ namespace Elaina
             {
                stream << "\"" << resource->GetName() << "\" ";
             }
-            stream << "} [color=" << writeRefEdgeColor
+            stream << "} [color=" << params.WriteRefEdgeColor
                << ", label=\" Write\"]"
                << std::endl;
          }
@@ -350,7 +353,7 @@ namespace Elaina
             {
                stream << "\"" << renderPass->GetName() << "\" ";
             }
-            stream << "} [color=" << readRefEdgeColor
+            stream << "} [color=" << params.ReadRefEdgeColor
                << ", label=\" Read\"]"
                << std::endl;
          }
