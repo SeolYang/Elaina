@@ -288,6 +288,9 @@ namespace Elaina
 
          stream << "digraph FrameGraph \n{\n";
 
+         stream << "splines=false" << std::endl;
+         stream << "graph [pad=\"0.1\", nodesep=\"1\", ranksep=\"2\"]" << std::endl;
+
          stream << "rankdir = " << (params.bLeftToRight ? "LR" : "TB") << std::endl;;
          stream << "bgcolor = " << params.BgColor << std::endl;
          stream << "node [shape=rectangle, fontname=\""
@@ -332,7 +335,7 @@ namespace Elaina
                stream << "\"" << resource->GetName() << "\" ";
             }
             stream << "} [color=" << params.CreateRefEdgeColor
-               << ", label=\"  Create\"]"
+               << "]"
                << std::endl;
 
             /** Write Resource */
@@ -342,7 +345,7 @@ namespace Elaina
                stream << "\"" << resource->GetName() << "\" ";
             }
             stream << "} [color=" << params.WriteRefEdgeColor
-               << ", label=\" Write\"]"
+               << "]"
                << std::endl;
          }
          stream << std::endl;
@@ -356,7 +359,7 @@ namespace Elaina
                stream << "\"" << renderPass->GetName() << "\" ";
             }
             stream << "} [color=" << params.ReadRefEdgeColor
-               << ", label=\" Read\"]"
+               << "]"
                << std::endl;
          }
 
