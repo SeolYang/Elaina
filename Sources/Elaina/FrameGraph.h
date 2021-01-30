@@ -268,16 +268,45 @@ namespace Elaina
          }
       }
 
+      /** If a distribution group executed, then it makes able to execute only with equal or exceed distribution group! */
+      void ExecuteDistributionGroup(const size_t distributionGroup)
+      {
+         if (LatestExecutedDistributionGruop <= distributionGroup)
+         {
+            for (auto phase : Phases)
+            {
+               if (phase.RenderPass->GetDistributionGroup() == distributionGroup)
+               {
+                  /* Realize resource */
+                  for (auto resource : phase.ToRealize)
+                  {
+                     resource->Realize();
+                  }
+
+                  phase.RenderPass->Execute();
+
+                  /* Derealize Resource*/
+                  for (auto resource : phase.ToDerealize)
+                  {
+                     resource->Derealize();
+                  }
+               }
+            }
+
+            LatestExecutedDistributionGruop = distributionGroup;
+         }
+      }
+
       void Clear()
       {
-         for (auto renderPass : RenderPasses)
-         {
-            SafeDelete(renderPass);
-         }
-
          for (auto resource : Resources)
          {
             SafeDelete(resource);
+         }
+
+         for (auto renderPass : RenderPasses)
+         {
+            SafeDelete(renderPass);
          }
 
          RenderPasses.clear();
@@ -377,6 +406,8 @@ namespace Elaina
       std::vector<RenderPass*> RenderPasses;
       std::vector<FrameResourceBase*> Resources;
       std::vector<RenderPhase> Phases;
+
+      size_t LatestExecutedDistributionGruop = 0;
 
       friend RenderPassBuilder;
 

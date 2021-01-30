@@ -1,5 +1,7 @@
 digraph FrameGraph 
 {
+splines=false
+graph [pad="0.1", nodestep="0.6", ranksep="1.5"]
 rankdir = LR
 bgcolor = black
 node [shape=rectangle, fontname="nanumgothic bold", fontsize=12, fontcolor=black]
@@ -7,28 +9,53 @@ edge [fontname="nanumgothic bold", fontsize=12, fontcolor=white]
 "CreateResourcePass" [label="CreateResourcePass
 \nDistribution Group : 0
 \nRefs : 2", style=filled, fillcolor=darkorange]
+"TwoTimesPass" [label="TwoTimesPass
+\nDistribution Group : 0
+\nRefs : 0", style=filled, fillcolor=darkorange]
 "AddPass" [label="AddPass
+\nDistribution Group : 1
+\nRefs : 1", style=filled, fillcolor=darkorange]
+"SubtractPass" [label="SubtractPass
 \nDistribution Group : 1
 \nRefs : 1", style=filled, fillcolor=darkorange]
 
 "Integer0" [label="Integer0
 \nID : 0
-\nRefs : 1
+\nRefs : 2
 \nTransient", style=filled, fillcolor=peachpuff]
 "Float0" [label="Float0
 \nID : 1
-\nRefs : 1
+\nRefs : 2
 \nTransient", style=filled, fillcolor=peachpuff]
-"Output" [label="Output
+"Add Pass Output" [label="Add Pass Output
 \nID : 2
 \nRefs : 0
 \nExternal Permanent", style=filled, fillcolor=palegreen]
-"CreateResourcePass" -> { "Integer0" "Float0" } [color=aquamarine, label="  Create"]
-"CreateResourcePass" -> { } [color=firebrick1, label=" Write"]
-"AddPass" -> { } [color=aquamarine, label="  Create"]
-"AddPass" -> { "Output" } [color=firebrick1, label=" Write"]
+"Sub Pass Output" [label="Sub Pass Output
+\nID : 3
+\nRefs : 0
+\nExternal Permanent", style=filled, fillcolor=palegreen]
+"Integer1" [label="Integer1
+\nID : 4
+\nRefs : 0
+\nTransient", style=filled, fillcolor=peachpuff]
+"Float1" [label="Float1
+\nID : 5
+\nRefs : 0
+\nTransient", style=filled, fillcolor=peachpuff]
+"CreateResourcePass" -> { "Integer0" "Float0" } [color=aquamarine]
+"CreateResourcePass" -> { } [color=firebrick1]
+"TwoTimesPass" -> { "Integer1" "Float1" } [color=aquamarine]
+"TwoTimesPass" -> { } [color=firebrick1]
+"AddPass" -> { } [color=aquamarine]
+"AddPass" -> { "Add Pass Output" } [color=firebrick1]
+"SubtractPass" -> { } [color=aquamarine]
+"SubtractPass" -> { "Sub Pass Output" } [color=firebrick1]
 
-"Integer0" -> { "AddPass" } [color=beige, label=" Read"]
-"Float0" -> { "AddPass" } [color=beige, label=" Read"]
-"Output" -> { } [color=beige, label=" Read"]
+"Integer0" -> { "AddPass" "SubtractPass" "TwoTimesPass" } [color=yellow]
+"Float0" -> { "AddPass" "SubtractPass" "TwoTimesPass" } [color=yellow]
+"Add Pass Output" -> { } [color=yellow]
+"Sub Pass Output" -> { } [color=yellow]
+"Integer1" -> { } [color=yellow]
+"Float1" -> { } [color=yellow]
 }

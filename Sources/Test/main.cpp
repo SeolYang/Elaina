@@ -34,23 +34,23 @@ float* Elaina::Realize(const FloatDescriptor& descriptor)
 
 struct DataCreatePassData
 {
-   IntFrameResource* IntegerOutput;
-   FloatFrameResource* FloatOutput;
+   IntFrameResource* IntegerOutput = nullptr;
+   FloatFrameResource* FloatOutput = nullptr;
 };
 
 struct FloatIntBinaryOpPassData
 {
-   IntFrameResource* IntegerInput;
-   FloatFrameResource* FloatInput;
-   FloatFrameResource* Output;
+   IntFrameResource* IntegerInput = nullptr;
+   FloatFrameResource* FloatInput = nullptr;
+   FloatFrameResource* Output = nullptr;
 };
 
 struct TwoTimesPassData
 {
-   IntFrameResource* IntegerInput;
-   FloatFrameResource* FloatInput;
-   IntFrameResource* IntegerOutput;
-   FloatFrameResource* FloatOutput;
+   IntFrameResource* IntegerInput = nullptr;
+   FloatFrameResource* FloatInput = nullptr;
+   IntFrameResource* IntegerOutput = nullptr;
+   FloatFrameResource* FloatOutput = nullptr;
 };
 
 int main()
@@ -146,10 +146,17 @@ int main()
       }, 0);
 
    frameGraph.Compile();
-   frameGraph.Execute();
+   //frameGraph.Execute();
+   //frameGraph.ExecuteDistributionGroup(2);
+   frameGraph.ExecuteDistributionGroup(0);
+   frameGraph.ExecuteDistributionGroup(1);
 
-   std::cout << "Add Pass result : " << (*addPassData.Output->GetActual()) << std::endl;
-   std::cout << "Sub Pass result : " << (*subPassData.Output->GetActual()) << std::endl;
+   /** It has possibility of actual data are nullptr, if execute frame graph with distribution group! */
+   auto addPassOutputActual = (addPassData.Output)->GetActual(); /** External Permanent resource always have actual. */
+   auto subPassOutputActual = (subPassData.Output)->GetActual();
+   std::cout << "Add Pass result : " << (*addPassOutputActual) << std::endl;
+   std::cout << "Sub Pass result : " << (*subPassOutputActual) << std::endl;
+
    frameGraph.ExportVisualization({ "FrameGraph.dot", "nanumgothic bold" });
    frameGraph.Clear();
 
