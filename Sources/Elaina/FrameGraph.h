@@ -291,7 +291,7 @@ namespace Elaina
          {
             stream << "\"" << renderPass->GetName() <<
                "\" [label=\"" << renderPass->GetName() << std::endl
-               << "Refs : " << renderPass->GetReferenceCount() <<
+               << "Refs : " << renderPass->GetRefCount() <<
                "\", style=filled, fillcolor=" << renderPassNodeColor << "]" << std::endl;
          }
          stream << std::endl;

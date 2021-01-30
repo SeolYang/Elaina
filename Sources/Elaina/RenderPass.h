@@ -22,7 +22,7 @@ namespace Elaina
 
       StringType GetName() const { return Name; }
 
-      size_t GetReferenceCount() const { return RefCount; }
+      size_t GetRefCount() const { return RefCount; }
       bool IsNeedToCull() const { return (RefCount == 0); }
 
    protected:
