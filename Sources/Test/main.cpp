@@ -38,7 +38,7 @@ struct DataCreatePassData
    FloatFrameResource* FloatOutput;
 };
 
-struct FloatIntAddPassData
+struct FloatIntBinaryOpPassData
 {
    IntFrameResource* IntegerInput;
    FloatFrameResource* FloatInput;
@@ -67,22 +67,22 @@ int main()
 
    auto createdData = createPass->GetData();
 
-   float* output = new float();
-   auto externalPermanentResource =
-      frameGraph.AddExternalPermanentResource("Output", FloatDescriptor(), output);
+   float* addOutput = new float();
+   auto addOutputResource =
+      frameGraph.AddExternalPermanentResource("Add Pass Output", FloatDescriptor(), addOutput);
 
-   auto addPass = frameGraph.AddCallbackPass<FloatIntAddPassData>(
+   auto addPass = frameGraph.AddCallbackPass<FloatIntBinaryOpPassData>(
       /** Render Pass Name */
       "AddPass",
       /** Setup callback */
-      [&](Elaina::RenderPassBuilder& builder, FloatIntAddPassData& data)
+      [&](Elaina::RenderPassBuilder& builder, FloatIntBinaryOpPassData& data)
       {
          data.IntegerInput = builder.Read(createdData.IntegerOutput);
          data.FloatInput = builder.Read(createdData.FloatOutput);
-         data.Output = builder.Write(externalPermanentResource);
+         data.Output = builder.Write(addOutputResource);
       },
       /** Execute callback  */
-      [](const FloatIntAddPassData& data)
+      [](const FloatIntBinaryOpPassData& data)
       {
          auto IntegerInputActual = data.IntegerInput->GetActual();
          auto FloatInputActual = data.FloatInput->GetActual();
@@ -90,15 +90,41 @@ int main()
          (*OutputActual) = static_cast<float>(*IntegerInputActual) + (*FloatInputActual);
       }, 1);
 
-   auto resultData = addPass->GetData();
+   float* subOutput = new float();
+   auto subOutputResource =
+      frameGraph.AddExternalPermanentResource("Sub Pass Output", FloatDescriptor(), subOutput);
+
+   auto subPass = frameGraph.AddCallbackPass<FloatIntBinaryOpPassData>(
+      /** Render Pass Name */
+      "SubtractPass",
+      /** Setup callback */
+      [&](Elaina::RenderPassBuilder& builder, FloatIntBinaryOpPassData& data)
+      {
+         data.IntegerInput = builder.Read(createdData.IntegerOutput);
+         data.FloatInput = builder.Read(createdData.FloatOutput);
+         data.Output = builder.Write(subOutputResource);
+      },
+      /** Execute callback  */
+         [](const FloatIntBinaryOpPassData& data)
+      {
+         auto IntegerInputActual = data.IntegerInput->GetActual();
+         auto FloatInputActual = data.FloatInput->GetActual();
+         auto OutputActual = data.Output->GetActual();
+         (*OutputActual) = static_cast<float>(*IntegerInputActual) - (*FloatInputActual);
+      }, 1);
+
+   auto addPassData = addPass->GetData();
+   auto subPassData = subPass->GetData();
 
    frameGraph.Compile();
    frameGraph.Execute();
 
-   std::cout << (*resultData.Output->GetActual()) << std::endl;
+   std::cout << "Add Pass result : " << (*addPassData.Output->GetActual()) << std::endl;
+   std::cout << "Sub Pass result : " << (*subPassData.Output->GetActual()) << std::endl;
    frameGraph.ExportVisualization({ "FrameGraph.dot", "nanumgothic bold" });
    frameGraph.Clear();
 
-   Elaina::SafeDelete(output);
+   Elaina::SafeDelete(addOutput);
+   Elaina::SafeDelete(subOutput);
    return 0;
 }
