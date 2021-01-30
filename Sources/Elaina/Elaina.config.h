@@ -26,3 +26,18 @@ namespace Elaina
      }
   }
 }
+
+#if defined(DEBUG) || defined(_DEBUG)
+#define ELAINA_ASSERT(condition, message) \
+do \
+{ \
+   if (!(condition)) \
+   { \
+      std::cerr << "Assertion failed in " << __FILE__ \
+                << " line " << __LINE__ << ": " << message << std::endl; \
+      std::terminate(); \
+   } \
+} while(false)
+#else
+#define ELAINA_ASSERT(condition, message) do { } while(false)
+#endif

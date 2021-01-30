@@ -4,26 +4,31 @@ rankdir = LR
 bgcolor = black
 node [shape=rectangle, fontname="nanumgothic bold", fontsize=12, fontcolor=black]
 edge [fontname="nanumgothic bold", fontsize=12, fontcolor=white]
-"AddPass" [label="AddPass
+"CreateResourcePass" [label="CreateResourcePass
 \nDistribution Group : 0
+\nRefs : 2", style=filled, fillcolor=darkorange]
+"AddPass" [label="AddPass
+\nDistribution Group : 1
 \nRefs : 1", style=filled, fillcolor=darkorange]
 
-"Output" [label="Output
-\nID : 0
-\nRefs : 0
-\nExternal Permanent", style=filled, fillcolor=palegreen]
 "Integer0" [label="Integer0
-\nID : 1
-\nRefs : 0
+\nID : 0
+\nRefs : 1
 \nTransient", style=filled, fillcolor=peachpuff]
 "Float0" [label="Float0
+\nID : 1
+\nRefs : 1
+\nTransient", style=filled, fillcolor=peachpuff]
+"Output" [label="Output
 \nID : 2
 \nRefs : 0
-\nTransient", style=filled, fillcolor=peachpuff]
-"AddPass" -> { "Integer0" "Float0" } [color=aquamarine, label="  Create"]
+\nExternal Permanent", style=filled, fillcolor=palegreen]
+"CreateResourcePass" -> { "Integer0" "Float0" } [color=aquamarine, label="  Create"]
+"CreateResourcePass" -> { } [color=firebrick1, label=" Write"]
+"AddPass" -> { } [color=aquamarine, label="  Create"]
 "AddPass" -> { "Output" } [color=firebrick1, label=" Write"]
 
+"Integer0" -> { "AddPass" } [color=beige, label=" Read"]
+"Float0" -> { "AddPass" } [color=beige, label=" Read"]
 "Output" -> { } [color=beige, label=" Read"]
-"Integer0" -> { } [color=beige, label=" Read"]
-"Float0" -> { } [color=beige, label=" Read"]
 }

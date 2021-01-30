@@ -32,6 +32,12 @@ float* Elaina::Realize(const FloatDescriptor& descriptor)
    return new float(descriptor.Value);
 }
 
+struct DataCreatePassData
+{
+   IntFrameResource* IntegerOutput;
+   FloatFrameResource* FloatOutput;
+};
+
 struct FloatIntAddPassData
 {
    IntFrameResource* IntegerInput;
@@ -47,18 +53,32 @@ int main()
 
    Elaina::FrameGraph frameGraph;
 
+   auto createPass = frameGraph.AddCallbackPass<DataCreatePassData>(
+      "CreateResourcePass",
+      [](Elaina::RenderPassBuilder& builder, DataCreatePassData& data)
+      {
+         data.IntegerOutput = builder.Create<IntFrameResource>("Integer0", IntDescriptor{ 5 });
+         data.FloatOutput = builder.Create<FloatFrameResource>("Float0", FloatDescriptor{ 3.0f });
+      },
+      [](const DataCreatePassData& data)
+      {
+         /** Nothing to do here */
+      }, 0); /** Distribution Group : 0 */
+
+   auto createdData = createPass->GetData();
+
    float* output = new float();
    auto externalPermanentResource =
       frameGraph.AddExternalPermanentResource("Output", FloatDescriptor(), output);
 
-   auto renderPass = frameGraph.AddCallbackPass<FloatIntAddPassData>(
+   auto addPass = frameGraph.AddCallbackPass<FloatIntAddPassData>(
       /** Render Pass Name */
       "AddPass",
       /** Setup callback */
       [&](Elaina::RenderPassBuilder& builder, FloatIntAddPassData& data)
       {
-         data.IntegerInput = builder.Create<IntFrameResource>("Integer0", IntDescriptor{ 3 });
-         data.FloatInput = builder.Create<FloatFrameResource>("Float0", FloatDescriptor{ 2.0f });
+         data.IntegerInput = builder.Read(createdData.IntegerOutput);
+         data.FloatInput = builder.Read(createdData.FloatOutput);
          data.Output = builder.Write(externalPermanentResource);
       },
       /** Execute callback  */
@@ -68,14 +88,14 @@ int main()
          auto FloatInputActual = data.FloatInput->GetActual();
          auto OutputActual = data.Output->GetActual();
          (*OutputActual) = static_cast<float>(*IntegerInputActual) + (*FloatInputActual);
-      });
+      }, 1);
 
-   auto data = renderPass->GetData();
+   auto resultData = addPass->GetData();
 
    frameGraph.Compile();
    frameGraph.Execute();
 
-   std::cout << (*data.Output->GetActual()) << std::endl;
+   std::cout << (*resultData.Output->GetActual()) << std::endl;
    frameGraph.ExportVisualization({ "FrameGraph.dot", "nanumgothic bold" });
    frameGraph.Clear();
 
