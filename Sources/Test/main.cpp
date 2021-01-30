@@ -76,6 +76,8 @@ int main()
    frameGraph.Execute();
 
    std::cout << (*data.Output->GetActual()) << std::endl;
+   frameGraph.ExportVisualization("FrameGraph.dot", "nanumgothic bold");
+   frameGraph.Clear();
 
    Elaina::SafeDelete(output);
    return 0;

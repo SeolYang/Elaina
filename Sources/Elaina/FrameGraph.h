@@ -268,9 +268,9 @@ namespace Elaina
       */
       void ExportVisualization(
          const std::string& filePath,
+         const std::string& fontName = "times", double fontSize = 12.0,
          bool bLeftToRight = true,
          const std::string& bgColor = "black",
-         const std::string& fontName = "times", double fontSize = 12.0,
          const std::string& renderPassNodeColor = "darkorange",
          const std::string& transientResNodeColor = "peachpuff",
          const std::string& externalResNodeColor = "palegreen",
@@ -280,7 +280,7 @@ namespace Elaina
       {
          std::ofstream stream(filePath);
 
-         stream << "diagraph FrameGraph \n{\n";
+         stream << "digraph FrameGraph \n{\n";
 
          stream << "rankdir = " << (bLeftToRight ? "LR" : "TB") << std::endl;;
          stream << "bgcolor = " << bgColor << std::endl;
@@ -291,7 +291,7 @@ namespace Elaina
          {
             stream << "\"" << renderPass->GetName() <<
                "\" [label=\"" << renderPass->GetName() << std::endl
-               << "Refs : " << renderPass->GetRefCount() <<
+               << "\\nRefs : " << renderPass->GetRefCount() <<
                "\", style=filled, fillcolor=" << renderPassNodeColor << "]" << std::endl;
          }
          stream << std::endl;
@@ -301,8 +301,9 @@ namespace Elaina
          {
             stream << "\"" << resource->GetName() <<
                "\" [label=\"" << resource->GetName() << std::endl
-               << "ID : " << resource->GetID() << std::endl
-               << "Refs : " << resource->GetRefCount() 
+               << "\\nID : " << resource->GetID() << std::endl
+               << "\\nRefs : " << resource->GetRefCount() << std::endl
+               << "\\n" << (resource->IsTransient() ? "Transient" : "External Permanent")
                << "\", style=filled, fillcolor=" << (resource->IsTransient() ? transientResNodeColor : externalResNodeColor) << "]" << std::endl;
          }
 
@@ -316,7 +317,9 @@ namespace Elaina
             {
                stream << "\"" << resource->GetName() << "\" ";
             }
-            stream << "} [color=" << createRefEdgeColor << "]" << std::endl;
+            stream << "} [color=" << createRefEdgeColor
+               << ", label=\"  Create\"]"
+               << std::endl;
 
             /** Write Resource */
             stream << "\"" << renderPass->GetName() << "\" -> { ";
@@ -324,7 +327,9 @@ namespace Elaina
             {
                stream << "\"" << resource->GetName() << "\" ";
             }
-            stream << "} [color=" << writeRefEdgeColor << "]" << std::endl;
+            stream << "} [color=" << writeRefEdgeColor
+               << ", label=\" Write\"]"
+               << std::endl;
          }
          stream << std::endl;
 
@@ -336,7 +341,9 @@ namespace Elaina
             {
                stream << "\"" << renderPass->GetName() << "\" ";
             }
-            stream << "} [color=" << readRefEdgeColor << "]" << std::endl;
+            stream << "} [color=" << readRefEdgeColor
+               << ", label=\" Read\"]"
+               << std::endl;
          }
 
          stream << "}"; // End of diagraph FrameGraph
