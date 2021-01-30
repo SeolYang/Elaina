@@ -45,7 +45,7 @@ namespace Elaina
       const std::string& ExternalResNodeColor = "palegreen";
       const std::string& CreateRefEdgeColor = "aquamarine";
       const std::string& WriteRefEdgeColor = "firebrick1";
-      const std::string& ReadRefEdgeColor = "beige";
+      const std::string& ReadRefEdgeColor = "yellow";
    };
 
    class FrameGraph
@@ -87,6 +87,13 @@ namespace Elaina
       /** Compile */
       void Compile()
       {
+         /** Sort render passes by Distribution Group */
+         std::stable_sort(RenderPasses.begin(), RenderPasses.end(),
+            [](const RenderPass* lhs, const RenderPass* rhs)
+            {
+               return lhs->GetDistributionGroup() < rhs->GetDistributionGroup();
+            });
+
          /** Calculate Reference Count */
          for (auto renderPass : RenderPasses)
          {
