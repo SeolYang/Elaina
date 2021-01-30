@@ -45,6 +45,14 @@ struct FloatIntBinaryOpPassData
    FloatFrameResource* Output;
 };
 
+struct TwoTimesPassData
+{
+   IntFrameResource* IntegerInput;
+   FloatFrameResource* FloatInput;
+   IntFrameResource* IntegerOutput;
+   FloatFrameResource* FloatOutput;
+};
+
 int main()
 {
 #ifdef _DEBUG
@@ -115,6 +123,27 @@ int main()
 
    auto addPassData = addPass->GetData();
    auto subPassData = subPass->GetData();
+
+   auto twoTimesPass = frameGraph.AddCallbackPass<TwoTimesPassData>(
+      "TwoTimesPass",
+      [&](Elaina::RenderPassBuilder& builder, TwoTimesPassData& data)
+      {
+         /** Read/Write a resource in a pass */
+         data.IntegerInput = builder.Read(createdData.IntegerOutput);
+         data.FloatInput = builder.Read(createdData.FloatOutput);
+         data.IntegerOutput = builder.Create<IntFrameResource>("Integer1", IntDescriptor{ 0 });
+         data.FloatOutput = builder.Create<FloatFrameResource>("Float1", FloatDescriptor{ 0.0f });
+      },
+      [](const TwoTimesPassData& data)
+      {
+         auto integerInputActual = data.IntegerInput->GetActual();
+         auto integerOutputActual = data.IntegerOutput->GetActual();
+         auto floatIntputActual = data.FloatInput->GetActual();
+         auto floatOutputActual = data.FloatOutput->GetActual();
+
+         (*integerOutputActual) = (*integerInputActual) * 2;
+         (*floatOutputActual) = (*floatIntputActual) * 2.0f;
+      }, 0);
 
    frameGraph.Compile();
    frameGraph.Execute();
