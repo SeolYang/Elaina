@@ -268,15 +268,15 @@ namespace Elaina
       */
       void ExportVisualization(
          const std::string& filePath,
-         bool bLeftToRight,
-         const std::string& bgColor,
-         const std::string& fontName, double fontSize,
-         const std::string& renderPassNodeColor,
-         const std::string& transientResNodeColor,
-         const std::string& externalResNodeColor,
-         const std::string& createRefEdgeColor,
-         const std::string& writeRefEdgeColor,
-         const std::string& readRefEdgeColor)
+         bool bLeftToRight = true,
+         const std::string& bgColor = "black",
+         const std::string& fontName = "times", double fontSize = 12.0,
+         const std::string& renderPassNodeColor = "darkorange",
+         const std::string& transientResNodeColor = "peachpuff",
+         const std::string& externalResNodeColor = "palegreen",
+         const std::string& createRefEdgeColor = "aquamarine",
+         const std::string& writeRefEdgeColor = "firebrick1",
+         const std::string& readRefEdgeColor = "beige")
       {
          std::ofstream stream(filePath);
 
