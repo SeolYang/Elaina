@@ -73,13 +73,7 @@ namespace Elaina
       template <typename DataType, typename... Args>
       CallbackRenderPass<DataType>* AddCallbackPass(Args&&... args)
       {
-         auto* newRenderPass = new CallbackRenderPass<DataType>(args...);
-         RenderPasses.push_back(newRenderPass);
-
-         RenderPassBuilder builder(this, newRenderPass);
-         newRenderPass->Setup(builder);
-
-         return newRenderPass;
+         return AddRenderPass<CallbackRenderPass<DataType>>(std::forward<Args>(args)...);
       }
 
       template <typename DescriptorType, typename ActualType>
