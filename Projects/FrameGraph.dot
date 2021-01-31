@@ -6,19 +6,32 @@ rankdir = LR
 bgcolor = black
 node [shape=rectangle, fontname="nanumgothic bold", fontsize=12, fontcolor=black]
 edge [fontname="nanumgothic bold", fontsize=12, fontcolor=white]
+subgraph cluster_distribution_group0
+{
+label="Distribution Group 0";
+fontname="nanumgothic bold";
+fontcolor=white;
+color=white;
 "CreateResourcePass" [label="CreateResourcePass
 \nDistribution Group : 0
-\nRefs : 2", style=filled, fillcolor=darkorange]
+\nRefs : 2", style=filled, fillcolor=darkorange];
 "TwoTimesPass" [label="TwoTimesPass
 \nDistribution Group : 0
-\nRefs : 0", style=filled, fillcolor=darkorange]
+\nRefs : 0", style=filled, fillcolor=darkorange];
+}
+subgraph cluster_distribution_group1
+{
+label="Distribution Group 1";
+fontname="nanumgothic bold";
+fontcolor=white;
+color=white;
 "AddPass" [label="AddPass
 \nDistribution Group : 1
-\nRefs : 1", style=filled, fillcolor=darkorange]
+\nRefs : 1", style=filled, fillcolor=darkorange];
 "SubtractPass" [label="SubtractPass
 \nDistribution Group : 1
-\nRefs : 1", style=filled, fillcolor=darkorange]
-
+\nRefs : 1", style=filled, fillcolor=darkorange];
+}
 "Integer0" [label="Integer0
 \nID : 0
 \nRefs : 2

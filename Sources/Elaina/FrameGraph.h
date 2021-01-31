@@ -33,12 +33,13 @@ namespace Elaina
    struct VisualizeParams
    {
       const std::string& FilePath = "output.dot";
-      const std::string& FontName = "times";
+      const std::string& FontName = "arial";
       double FontSize = 12.0;
       const std::string& FontColor = "black";
       const std::string& EdgeFontColor = "white";
       double EdgeFontSize = 12.0;
       const std::string& BgColor = "black";
+      const std::string& SubgraphBorderColor = "white";
       bool bLeftToRight = true;
       bool bSplines = false;
       double Pad = 0.1;
@@ -348,15 +349,31 @@ namespace Elaina
             << ", fontcolor=" << params.EdgeFontColor << "]" << std::endl;
 
          /** Export Render Passes as graph nodes */
+         int latestDistributionGroup = -1;
          for (auto renderPass : RenderPasses)
          {
+            if (latestDistributionGroup < (int)renderPass->GetDistributionGroup())
+            {
+               if (latestDistributionGroup != -1)
+               {
+                  stream << "}" << std::endl;
+               }
+
+               latestDistributionGroup = renderPass->GetDistributionGroup();
+               stream << "subgraph cluster_distribution_group" << latestDistributionGroup << std::endl;
+               stream << "{" << std::endl << "label=\"Distribution Group " << latestDistributionGroup << "\";" << std::endl;
+               stream << "fontname=\"" << params.FontName << "\";" << std::endl;
+               stream << "fontcolor=" << params.EdgeFontColor << ";" << std::endl;
+               stream << "color=" << params.SubgraphBorderColor << ";" << std::endl;
+            }
+
             stream << "\"" << renderPass->GetName() <<
                "\" [label=\"" << renderPass->GetName() << std::endl
                << "\\nDistribution Group : " << renderPass->GetDistributionGroup() << std::endl
                << "\\nRefs : " << renderPass->GetRefCount() <<
-               "\", style=filled, fillcolor=" << params.RenderPassNodeColor << "]" << std::endl;
+               "\", style=filled, fillcolor=" << params.RenderPassNodeColor << "];" << std::endl;
          }
-         stream << std::endl;
+         stream << "}" << std::endl;
 
          /** Export Resources as graph nodes */
          for (auto resource : Resources)
