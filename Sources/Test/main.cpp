@@ -147,7 +147,7 @@ int main()
 
    frameGraph.Compile();
    //frameGraph.Execute();
-   //frameGraph.ExecuteDistributionGroup(2);
+   //frameGraph.ExecuteDistributionGroup(2); /** Distribution group must execute in order.  */
    frameGraph.ExecuteDistributionGroup(0);
    frameGraph.ExecuteDistributionGroup(1);
 
