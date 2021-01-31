@@ -294,7 +294,7 @@ namespace Elaina
                }
                else if (phase.RenderPass->GetDistributionGroup() > distributionGroup)
                {
-                  LatestExcutedIndex = idx + 1;
+                  LatestExcutedIndex = idx;
                   break;
                }
             }
