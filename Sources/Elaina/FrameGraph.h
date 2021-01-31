@@ -273,8 +273,9 @@ namespace Elaina
       {
          if (LatestExecutedDistributionGruop <= distributionGroup)
          {
-            for (auto phase : Phases)
+            for (size_t idx = LatestExcutedIndex; idx < Phases.size(); ++idx)
             {
+               auto phase = Phases[idx];
                if (phase.RenderPass->GetDistributionGroup() == distributionGroup)
                {
                   /* Realize resource */
@@ -290,6 +291,11 @@ namespace Elaina
                   {
                      resource->Derealize();
                   }
+               }
+               else if (phase.RenderPass->GetDistributionGroup() > distributionGroup)
+               {
+                  LatestExcutedIndex = idx + 1;
+                  break;
                }
             }
 
@@ -312,6 +318,9 @@ namespace Elaina
          RenderPasses.clear();
          Resources.clear();
          Phases.clear();
+
+         LatestExecutedDistributionGruop = 0;
+         LatestExcutedIndex = 0;
       }
 
 
@@ -408,6 +417,7 @@ namespace Elaina
       std::vector<RenderPhase> Phases;
 
       size_t LatestExecutedDistributionGruop = 0;
+      size_t LatestExcutedIndex = 0;
 
       friend RenderPassBuilder;
 
